@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookBeacon.API", "BookBeacon.API\BookBeacon.API.csproj", "{6A8CBB84-E5CD-4197-94F8-6E8D5F178C91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookBeacon.BL", "BookBeacon.BL\BookBeacon.BL.csproj", "{8A3C8AD0-6CB9-4CB8-AD99-0CC1FFBCE5F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookBeacon.DAL", "BookBeacon.DAL\BookBeacon.DAL.csproj", "{AF5B882B-B861-4A41-962A-18C256CA4D94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookBeacon.Models", "BookBeacon.Models\BookBeacon.Models.csproj", "{4BD6989B-2B2B-4E2D-9989-760490B5A943}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A8CBB84-E5CD-4197-94F8-6E8D5F178C91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A8CBB84-E5CD-4197-94F8-6E8D5F178C91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A8CBB84-E5CD-4197-94F8-6E8D5F178C91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A8CBB84-E5CD-4197-94F8-6E8D5F178C91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A3C8AD0-6CB9-4CB8-AD99-0CC1FFBCE5F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A3C8AD0-6CB9-4CB8-AD99-0CC1FFBCE5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A3C8AD0-6CB9-4CB8-AD99-0CC1FFBCE5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A3C8AD0-6CB9-4CB8-AD99-0CC1FFBCE5F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF5B882B-B861-4A41-962A-18C256CA4D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF5B882B-B861-4A41-962A-18C256CA4D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF5B882B-B861-4A41-962A-18C256CA4D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF5B882B-B861-4A41-962A-18C256CA4D94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BD6989B-2B2B-4E2D-9989-760490B5A943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BD6989B-2B2B-4E2D-9989-760490B5A943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BD6989B-2B2B-4E2D-9989-760490B5A943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BD6989B-2B2B-4E2D-9989-760490B5A943}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
