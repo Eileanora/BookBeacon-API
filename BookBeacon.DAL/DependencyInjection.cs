@@ -1,4 +1,8 @@
+using BookBeacon.BL.Repositories;
 using BookBeacon.DAL.Context;
+using BookBeacon.DAL.Helpers.SortHelper;
+using BookBeacon.DAL.Repositories;
+using BookBeacon.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +21,10 @@ public static class DependencyInjection
             // options.AddInterceptors(UpdateAuditFieldsInterceptor);
             options.EnableSensitiveDataLogging(); // Corrected line
         });
+
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ISortHelper<Genre>, SortHelper<Genre>>();
         return services;
     }
 }
