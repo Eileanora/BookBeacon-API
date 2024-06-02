@@ -19,7 +19,7 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .IsRequired()
             .HasMaxLength(50);
         builder.Property(a => a.Biography)
-            .HasMaxLength(500);
+            .HasMaxLength(1000);
 
         builder.HasMany(a => a.Books)
             .WithOne(b => b.Author);

@@ -9,19 +9,16 @@ public class Book : PrimaryKeyBaseEntity
     public string Summary { get; set; } = string.Empty;
     public int PageCount { get; set; }
     
-    public int LanguageId { get; set; }
-    
     public int PublisherId { get; set; }
-    public Publisher Publisher { get; set; } = new();
+    public Publisher Publisher { get; set; } 
     
     public int CategoryId { get; set; }
-    public Category Category { get; set; } = new();
+    public Category Category { get; set; } 
     
     public int AuthorId { get; set; }
-    public Author Author { get; set; } = new();
-    
+    public Author Author { get; set; } 
+    public ICollection<Copy> Copies { get; set; } = new List<Copy>();
     public ICollection<Language> Languages { get; set; } = new List<Language>();
     public ICollection<Genre> Genres { get; set; } = new List<Genre>();
-    public ICollection<Copy> Copies { get; set; } = new List<Copy>();
 }
 

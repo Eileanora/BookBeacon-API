@@ -11,7 +11,7 @@ public class PublisherConfiguration : IEntityTypeConfiguration<Publisher>
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Name)
             .IsRequired()
-            .HasMaxLength(20);
+            .HasMaxLength(50);
         
         builder.HasMany(b => b.Books)
             .WithOne(p => p.Publisher);

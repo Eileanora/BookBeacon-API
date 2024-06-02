@@ -13,7 +13,5 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .IsRequired()
             .HasMaxLength(15);
 
-        builder.HasMany(b => b.Books)
-            .WithMany(g => g.Genres);
     }
 }

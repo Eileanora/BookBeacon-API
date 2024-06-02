@@ -242,7 +242,6 @@ namespace BookBeacon.DAL.Migrations
                     ISBN = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     Summary = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     PageCount = table.Column<int>(type: "int", nullable: false),
-                    LanguageId = table.Column<int>(type: "int", nullable: false),
                     PublisherId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     AuthorId = table.Column<int>(type: "int", nullable: false),
@@ -363,21 +362,21 @@ namespace BookBeacon.DAL.Migrations
                 name: "BookGenre",
                 columns: table => new
                 {
-                    BooksId = table.Column<int>(type: "int", nullable: false),
-                    GenresId = table.Column<int>(type: "int", nullable: false)
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    GenreId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookGenre", x => new { x.BooksId, x.GenresId });
+                    table.PrimaryKey("PK_BookGenre", x => new { x.BookId, x.GenreId });
                     table.ForeignKey(
-                        name: "FK_BookGenre_Books_BooksId",
-                        column: x => x.BooksId,
+                        name: "FK_BookGenre_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookGenre_Genres_GenresId",
-                        column: x => x.GenresId,
+                        name: "FK_BookGenre_Genres_GenreId",
+                        column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -387,21 +386,27 @@ namespace BookBeacon.DAL.Migrations
                 name: "BookLanguage",
                 columns: table => new
                 {
-                    BooksId = table.Column<int>(type: "int", nullable: false),
-                    LanguagesId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    LanguageId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookLanguage", x => new { x.BooksId, x.LanguagesId });
+                    table.PrimaryKey("PK_BookLanguage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookLanguage_Books_BooksId",
-                        column: x => x.BooksId,
+                        name: "FK_BookLanguage_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookLanguage_Languages_LanguagesId",
-                        column: x => x.LanguagesId,
+                        name: "FK_BookLanguage_Languages_LanguageId",
+                        column: x => x.LanguageId,
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -450,8 +455,7 @@ namespace BookBeacon.DAL.Migrations
                     IsReturned = table.Column<bool>(type: "bit", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CopyId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -461,8 +465,8 @@ namespace BookBeacon.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Reservations_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -524,14 +528,19 @@ namespace BookBeacon.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookGenre_GenresId",
+                name: "IX_BookGenre_GenreId",
                 table: "BookGenre",
-                column: "GenresId");
+                column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookLanguage_LanguagesId",
+                name: "IX_BookLanguage_BookId",
                 table: "BookLanguage",
-                column: "LanguagesId");
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookLanguage_LanguageId",
+                table: "BookLanguage",
+                column: "LanguageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_AuthorId",
@@ -564,9 +573,9 @@ namespace BookBeacon.DAL.Migrations
                 column: "CopyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId1",
+                name: "IX_Reservations_UserId",
                 table: "Reservations",
-                column: "UserId1");
+                column: "UserId");
         }
 
         /// <inheritdoc />

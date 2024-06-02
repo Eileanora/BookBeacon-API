@@ -24,8 +24,4 @@
       <ProjectReference Include="..\BookBeacon.Models\BookBeacon.Models.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DataSeeding\" />
-    </ItemGroup>
-
 </Project>

@@ -12,8 +12,5 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
         builder.Property(b => b.Name)
             .IsRequired()
             .HasMaxLength(20);
-
-        builder.HasMany(b => b.Books)
-            .WithMany(l => l.Languages);
     }
 }

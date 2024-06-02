@@ -3,6 +3,8 @@ using Asp.Versioning;
 using BookBeacon.API.Helpers;
 using BookBeacon.BL;
 using BookBeacon.DAL;
+using BookBeacon.DAL.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookBeacon.API;
 
@@ -90,8 +92,27 @@ public static class StartupHelper
         //         });
         //     });
         // }
-         
         return app; 
     }
     
+    public static async Task ResetDatabaseAsync(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            try
+            {
+                var context = scope.ServiceProvider.GetService<BookBeaconContext>();
+                if (context != null)
+                {
+                    await context.Database.EnsureDeletedAsync();
+                    await context.Database.MigrateAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                logger.LogError(ex, "An error occurred while migrating the database.");
+            }
+        } 
+    }
 }

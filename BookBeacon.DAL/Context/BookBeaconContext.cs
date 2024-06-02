@@ -1,4 +1,5 @@
 using BookBeacon.DAL.Configurations;
+using BookBeacon.DAL.DataSeeding;
 using BookBeacon.Models.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,18 @@ public class BookBeaconContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthorConfiguration).Assembly);
+        AuthorSeeding.SeedAuthors(modelBuilder);
+        GenderSeeding.SeedGenders(modelBuilder);
+        MembershipTypeSeeding.SeedMembershipTypes(modelBuilder);
+        PublisherSeeding.SeedPublishers(modelBuilder);
+        CategorySeeding.SeedCategories(modelBuilder);
+        GenreSeeding.SeedGenres(modelBuilder);
+        LanguageSeeding.SeedLanguages(modelBuilder);
+        BookSeeding.SeedBooks(modelBuilder);
+        BookGenreSeeding.SeedBookGenre(modelBuilder);
+        BookLanguageSeeding.SeedBookLanguage(modelBuilder);
+        BookConditionSeeding.SeedBookConditions(modelBuilder);
+        CopiesSeeding.SeedCopies(modelBuilder);
     }
     
     public DbSet<Author> Authors { get; set; }

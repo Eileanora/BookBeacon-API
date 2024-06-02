@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookBeacon.DAL.Migrations
 {
     [DbContext(typeof(BookBeaconContext))]
-    [Migration("20240529212314_Initial")]
+    [Migration("20240602073503_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,9 +92,6 @@ namespace BookBeacon.DAL.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PageCount")
                         .HasColumnType("int");
 
@@ -159,6 +156,56 @@ namespace BookBeacon.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookConditions");
+                });
+
+            modelBuilder.Entity("BookBeacon.Models.Models.BookGenre", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "GenreId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("BookGenre");
+                });
+
+            modelBuilder.Entity("BookBeacon.Models.Models.BookLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("BookLanguage");
                 });
 
             modelBuilder.Entity("BookBeacon.Models.Models.Category", b =>
@@ -431,10 +478,7 @@ namespace BookBeacon.DAL.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -442,7 +486,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("CopyId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -534,36 +578,6 @@ namespace BookBeacon.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("BookGenre", b =>
-                {
-                    b.Property<int>("BooksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GenresId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BooksId", "GenresId");
-
-                    b.HasIndex("GenresId");
-
-                    b.ToTable("BookGenre");
-                });
-
-            modelBuilder.Entity("BookLanguage", b =>
-                {
-                    b.Property<int>("BooksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LanguagesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BooksId", "LanguagesId");
-
-                    b.HasIndex("LanguagesId");
-
-                    b.ToTable("BookLanguage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -726,6 +740,44 @@ namespace BookBeacon.DAL.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("BookBeacon.Models.Models.BookGenre", b =>
+                {
+                    b.HasOne("BookBeacon.Models.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookBeacon.Models.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("BookBeacon.Models.Models.BookLanguage", b =>
+                {
+                    b.HasOne("BookBeacon.Models.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookBeacon.Models.Models.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Language");
+                });
+
             modelBuilder.Entity("BookBeacon.Models.Models.Copy", b =>
                 {
                     b.HasOne("BookBeacon.Models.Models.Book", "Book")
@@ -753,7 +805,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasOne("BookBeacon.Models.Models.User", "User")
                         .WithMany("Reservations")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -779,36 +831,6 @@ namespace BookBeacon.DAL.Migrations
                     b.Navigation("Gender");
 
                     b.Navigation("MembershipType");
-                });
-
-            modelBuilder.Entity("BookGenre", b =>
-                {
-                    b.HasOne("BookBeacon.Models.Models.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookBeacon.Models.Models.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BookLanguage", b =>
-                {
-                    b.HasOne("BookBeacon.Models.Models.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookBeacon.Models.Models.Language", null)
-                        .WithMany()
-                        .HasForeignKey("LanguagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
