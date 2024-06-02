@@ -59,7 +59,7 @@ public class GenreController : ControllerBase
             genre,
             options => options.IncludeRuleSets("CreateInput"));
         
-            if (!validationResult.IsValid)
+        if (!validationResult.IsValid)
         {
             validationResult.AddToModelState(this.ModelState);
             return ValidationProblem(ModelState);

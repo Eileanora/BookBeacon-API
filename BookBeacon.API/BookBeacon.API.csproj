@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="temp\AuthorControllerFacade\" />
       <Folder Include="temp\BookControllerFacade\" />
       <Folder Include="temp\CategoryControllerFacade\" />
       <Folder Include="temp\CopyControllerFacade\" />
