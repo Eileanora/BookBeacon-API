@@ -7,6 +7,6 @@ var app = builder
     .ConfigurePipeline();
 
 
-await app.ResetDatabaseAsync();
+// await app.ResetDatabaseAsync();
 
 app.Run();

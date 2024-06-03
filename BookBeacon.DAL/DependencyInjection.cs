@@ -24,11 +24,13 @@ public static class DependencyInjection
 
         services.AddScoped<IGenreRepository, GenreRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISortHelper<Genre>, SortHelper<Genre>>();
         services.AddScoped<ISortHelper<Author>, SortHelper<Author>>();
-        
+        services.AddScoped<ISortHelper<Book>, SortHelper<Book>>();
+
         
         return services;
     }

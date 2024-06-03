@@ -8,5 +8,4 @@ public interface IBaseRepository <T>
     public Task<T?> CreateAsync(T entity);
     public T Update(T entity);
     public void Delete(T entity);
-    public Task<IEnumerable<T>> GetAllAsync();
 }
