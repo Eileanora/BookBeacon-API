@@ -58,7 +58,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
 
                     b.HasData(
                         new
@@ -214,7 +214,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
 
                     b.HasData(
                         new
@@ -351,7 +351,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BookConditions");
+                    b.ToTable("BookConditions", (string)null);
 
                     b.HasData(
                         new
@@ -422,7 +422,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("BookGenre");
+                    b.ToTable("BookGenre", (string)null);
 
                     b.HasData(
                         new
@@ -549,7 +549,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("BookLanguage");
+                    b.ToTable("BookLanguage", (string)null);
 
                     b.HasData(
                         new
@@ -658,7 +658,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -755,7 +755,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("ConditionId");
 
-                    b.ToTable("Copies");
+                    b.ToTable("Copies", (string)null);
 
                     b.HasData(
                         new
@@ -1172,7 +1172,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genders");
+                    b.ToTable("Genders", (string)null);
 
                     b.HasData(
                         new
@@ -1218,7 +1218,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -1348,7 +1348,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
 
                     b.HasData(
                         new
@@ -1431,7 +1431,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MembershipTypes");
+                    b.ToTable("MembershipTypes", (string)null);
 
                     b.HasData(
                         new
@@ -1503,7 +1503,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publishers", (string)null);
 
                     b.HasData(
                         new
@@ -1595,7 +1595,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("BookBeacon.Models.Models.User", b =>
@@ -1640,7 +1640,7 @@ namespace BookBeacon.DAL.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("MembershipTypeId")
+                    b.Property<int?>("MembershipTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
@@ -1931,9 +1931,7 @@ namespace BookBeacon.DAL.Migrations
 
                     b.HasOne("BookBeacon.Models.Models.MembershipType", "MembershipType")
                         .WithMany("Users")
-                        .HasForeignKey("MembershipTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MembershipTypeId");
 
                     b.Navigation("Gender");
 

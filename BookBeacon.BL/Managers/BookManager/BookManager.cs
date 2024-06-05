@@ -2,6 +2,7 @@ using BookBeacon.BL.DTOs.BookDTOs;
 using BookBeacon.BL.Helpers.Facades.BookManagerFacade;
 using BookBeacon.BL.Helpers.Mappers;
 using BookBeacon.BL.ResourceParameters;
+using FluentValidation;
 
 namespace BookBeacon.BL.Managers.BookManager;
 
@@ -28,9 +29,28 @@ public class BookManager : IBookManager
         return book?.ToDto();
     }
 
-    public Task<BookDto?> CreateAsync(BookDto bookDto)
+    public async Task<BookDto?> CreateAsync(BookDto bookDto)
     {
-        throw new NotImplementedException();
+        var validationResult = await _bookManagerFacade.BookValidator.ValidateAsync(
+            bookDto,
+            options => options.IncludeRuleSets("CreateBusiness"));
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+
+        // Fetch existing genres and languages
+        var existingGenres = await _bookManagerFacade.GenreRepository
+            .GetGenresByIdsAsync(bookDto.GenreIds.ToList());
+        var existingLanguages = await _bookManagerFacade.LanguageRepository
+            .GetLanguageByIdsAsync(bookDto.LanguageIds.ToList());
+
+        var bookToCreate = bookDto.ToCreateEntity(existingGenres, existingLanguages);
+
+        var createdBook = await _bookManagerFacade.BookRepository
+            .CreateAsync(bookToCreate);
+
+        await _bookManagerFacade.UnitOfWork.SaveAsync();
+        return createdBook.ToDto();
     }
 
     public Task UpdateAsync(int id, BookDto bookDto)
@@ -38,8 +58,14 @@ public class BookManager : IBookManager
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var book = await _bookManagerFacade.BookRepository
+            .GetByIdAsync(id);
+        if (book == null)
+            return false;
+        _bookManagerFacade.BookRepository.Delete(book);
+        await _bookManagerFacade.UnitOfWork.SaveAsync();
+        return true;
     }
 }

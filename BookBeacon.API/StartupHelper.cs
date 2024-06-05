@@ -1,10 +1,15 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using BookBeacon.API.Helpers;
 using BookBeacon.BL;
 using BookBeacon.DAL;
 using BookBeacon.DAL.Context;
+using BookBeacon.Models.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookBeacon.API;
 
@@ -13,6 +18,8 @@ public static class StartupHelper
     public static WebApplication ConfigureServices(
         this WebApplicationBuilder builder)
     {
+        var configuration = builder.Configuration;
+        
         #region Formatters options
         builder.Services.AddControllers(options =>
             {
@@ -47,19 +54,37 @@ public static class StartupHelper
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         #endregion
+        
+        
+        builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BookBeaconContext>();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, Options =>
+            {
+                Options.SaveToken = true;
 
-        builder.Services.AddAuthorization();
-        // builder.Services.AddAuthentication("Bearer")
-        //     .AddJwtBearer("Bearer", options =>
-        //     {
-        //         options.Authority = "https://localhost:5001";
-        //         options.TokenValidationParameters = new TokenValidationParameters
-        //         {
-        //             ValidateAudience = false
-        //         };
-        //     });
-        //
-        // builder.Services.AddIdentityCore<User>();
+                Options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,  
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,    
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidateLifetime = true , 
+                    ValidateIssuerSigningKey = true ,   
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                };
+            }); 
+
+        builder.Services.AddAuthorization(options =>
+        {
+            //
+            // options.AddPolicy("AdminOnly", policy =>
+            //     policy.RequireRole("Admin"));
+            //
+            // options.AddPolicy("UserOnly", policy =>
+            //     policy.RequireRole("User"));
+        });
+        
+        
         return builder.Build();
     }
     
@@ -73,6 +98,7 @@ public static class StartupHelper
         }
         
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
         app.UseExceptionHandler();
@@ -110,8 +136,9 @@ public static class StartupHelper
             }
             catch (Exception ex)
             {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                logger.LogError(ex, "An error occurred while migrating the database.");
+                Console.WriteLine(ex.Message);
+                // //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                // logger.LogError(ex, "An error occurred while migrating the database.");
             }
         } 
     }

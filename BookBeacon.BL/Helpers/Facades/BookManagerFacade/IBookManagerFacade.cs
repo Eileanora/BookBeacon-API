@@ -9,4 +9,6 @@ public interface IBookManagerFacade
     IUnitOfWork UnitOfWork { get; }
     IBookRepository BookRepository { get; }
     IValidator<BookDto> BookValidator { get; }
+    ILanguageRepository LanguageRepository { get; }
+    IGenreRepository GenreRepository { get; }
 }

@@ -31,12 +31,10 @@ public class GenreController : ControllerBase
         var genres = await _genreControllerFacade
             .GenreManager.GetAllAsync(resourceParameters);
         
-        var paginationHelper = new PaginationHelper<GenreDto, GenreResourceParameters>();
-        paginationHelper.CreateMetaDataHeader(genres,
-            resourceParameters,
-            Response.Headers,
-            Url, "GetAllGenres");
-    
+        _genreControllerFacade.PaginationHelper
+            .CreateMetaDataHeader(
+                genres, resourceParameters, Response.Headers, Url, "GetAllGenres");
+        
         return Ok(genres);
     }
     

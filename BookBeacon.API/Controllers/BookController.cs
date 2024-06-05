@@ -1,8 +1,10 @@
 using Asp.Versioning;
 using BookBeacon.API.Helpers.Facades.BookControllerFacade;
+using BookBeacon.API.Helpers.InputValidator;
 using BookBeacon.API.Helpers.PaginationHelper;
 using BookBeacon.BL.DTOs.BookDTOs;
 using BookBeacon.BL.ResourceParameters;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookBeacon.API.Controllers;
@@ -21,17 +23,15 @@ public class BookController : ControllerBase
     
     [HttpGet(Name = "GetAllBooks")]
     [HttpHead]
-    public async Task<IActionResult> GetAllGenresAsync(
+    public async Task<IActionResult> GetAllBooksAsync(
         [FromQuery] BookResourceParameters resourceParameters)
     {
         var books = await _bookControllerFacade
             .BookManager.GetAllAsync(resourceParameters);
         
-        var paginationHelper = new PaginationHelper<BookDto, BookResourceParameters>();
-        paginationHelper.CreateMetaDataHeader(books,
-            resourceParameters,
-            Response.Headers,
-            Url, "GetAllGenres");
+        _bookControllerFacade.PaginationHelper
+            .CreateMetaDataHeader(
+                books, resourceParameters, Response.Headers, Url, "GetAllBooks");
     
         return Ok(books);
     }
@@ -45,6 +45,38 @@ public class BookController : ControllerBase
             return NotFound();
         }
         return Ok(book);
+    }
+    
+    
+    [HttpPost]
+    public async Task<ActionResult<BookDto>> CreateBookAsync(
+        [FromBody] BookDto book)
+    {
+        var validationResult = await _bookControllerFacade.BookValidator.ValidateAsync(
+            book,
+            options => options.IncludeRuleSets("Input"));
+        
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(this.ModelState);
+            return ValidationProblem(ModelState);
+        }
+        
+        var newBook = await _bookControllerFacade.BookManager.CreateAsync(book);
+        return CreatedAtRoute("GetBook",
+            new { bookId = newBook.Id },
+            newBook);
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteBook(int bookId)
+    {
+        var deleted = await _bookControllerFacade.BookManager.DeleteAsync(bookId);
+        
+        if (!deleted)
+            return NotFound();
+        
+        return NoContent();
     }
     
 }

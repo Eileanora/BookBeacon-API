@@ -10,4 +10,6 @@ public interface IGenreRepository : IBaseRepository<Genre>
     public Task<Genre?> GetByIdAsync(int id);
     
     public Task<Genre?> GetByNameAsync(string name);
+    
+    Task<List<Genre>> GetGenresByIdsAsync(List<int> ids);
 }

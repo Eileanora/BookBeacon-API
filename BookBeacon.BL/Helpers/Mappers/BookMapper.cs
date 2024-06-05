@@ -56,4 +56,22 @@ public static class BookMapper
             Languages = book.Languages.Select(s => s.Name).ToList(),
         };
     }
+    
+    public static Book ToCreateEntity(this BookDto bookDto, List<Genre> existingGenres, List<Language> existingLanguages)
+    {
+        return new Book
+        {
+            Title = bookDto.Title,
+            ISBN = bookDto.ISBN,
+            AuthorId = bookDto.AuthorId.GetValueOrDefault(),
+            Summary = bookDto.Summary,
+            PageCount = bookDto.PageCount.GetValueOrDefault(),
+            PublicationDate = bookDto.PublicationDate.GetValueOrDefault(),
+            Edition = bookDto.Edition.GetValueOrDefault(),
+            CategoryId = bookDto.CategoryId.GetValueOrDefault(),
+            PublisherId = bookDto.PublisherId.GetValueOrDefault(),
+            Genres = existingGenres.ToList(),
+            Languages = existingLanguages.ToList()
+        };
+    }
 }

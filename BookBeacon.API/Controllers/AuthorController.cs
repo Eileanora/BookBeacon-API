@@ -29,12 +29,10 @@ public class AuthorController : ControllerBase
     {
         var authors = await _authorControllerFacade.AuthorManager.GetAllAsync(resourceParameters);
         
-        var paginationHelper = new PaginationHelper<AuthorDto, AuthorResourceParameters>();
-        paginationHelper.CreateMetaDataHeader(authors,
-            resourceParameters,
-            Response.Headers,
-            Url, "GetAllAuthors");
-    
+        _authorControllerFacade.PaginationHelper
+            .CreateMetaDataHeader(
+                authors, resourceParameters, Response.Headers, Url, "GetAllAuthors");
+        
         return Ok(authors);
     }
     

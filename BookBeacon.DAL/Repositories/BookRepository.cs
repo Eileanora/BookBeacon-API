@@ -108,4 +108,11 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
             .Include(b => b.Copies)
             .FirstOrDefaultAsync(b => b.Id == id);
     }
+
+    public async Task<bool> IsIsbnUnique(string title)
+    {
+        return await DbContext.Books
+            .AsNoTracking()
+            .AnyAsync(b => b.Title == title);
+    }
 }

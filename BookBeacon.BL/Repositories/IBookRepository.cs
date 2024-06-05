@@ -11,4 +11,5 @@ public interface IBookRepository : IBaseRepository<Book>
     Task<PagedList<Book>> GetAllAsync(
         BookResourceParameters resourceParameters);
     Task<Book?> GetByIdAsync(int id);
+    Task<bool> IsIsbnUnique(string title);
 }
