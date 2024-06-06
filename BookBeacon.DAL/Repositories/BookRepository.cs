@@ -107,7 +107,7 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
         return collection;
     }
 
-    public Task<Book?> GetByIdAsync(int id)
+    public Task<Book?> GetByIdAsync(int? id)
     {
         return DbContext.Books
             .AsNoTracking()

@@ -3,8 +3,10 @@ using BookBeacon.API.Helpers.Facades.BookControllerFacade;
 using BookBeacon.API.Helpers.InputValidator;
 using BookBeacon.API.Helpers.PaginationHelper;
 using BookBeacon.BL.DTOs.BookDTOs;
+using BookBeacon.BL.Helpers.Mappers;
 using BookBeacon.BL.ResourceParameters;
 using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookBeacon.API.Controllers;
@@ -75,6 +77,34 @@ public class BookController : ControllerBase
         
         if (!deleted)
             return NotFound();
+        
+        return NoContent();
+    }
+    
+    [HttpPatch("{bookId}")]
+    public async Task<IActionResult> UpdateBook(
+        int bookId,
+        JsonPatchDocument<BookDto> patchDocument)
+    {
+        var book = await _bookControllerFacade.BookManager.GetByIdAsync(bookId);
+        
+        if (book == null)
+            return NotFound();
+        
+        var bookToPatch = book.ToUpdateDto();
+        patchDocument.ApplyTo(bookToPatch, ModelState);
+        
+        var validationResult = await _bookControllerFacade.BookValidator.ValidateAsync(
+            bookToPatch,
+            options => options.IncludeRuleSets("Input"));
+        
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(this.ModelState);
+            return ValidationProblem(ModelState);
+        }
+        
+        await _bookControllerFacade.BookManager.UpdateAsync(bookToPatch);
         
         return NoContent();
     }

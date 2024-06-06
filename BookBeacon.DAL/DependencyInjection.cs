@@ -29,6 +29,9 @@ public static class DependencyInjection
         services.AddScoped<ICopyRepository, CopyRepository>();
         services.AddScoped<ILanguageRepository, LanguageRepository>();
         services.AddScoped<IBookConditionRepository, BookConditionRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISortHelper<Genre>, SortHelper<Genre>>();

@@ -7,7 +7,11 @@ namespace BookBeacon.BL.Helpers.Validators.BookValidators;
 public class BookDtoValidator : AbstractValidator<BookDto>
 {
     public BookDtoValidator(
-        IBookRepository bookRepository)
+        IBookRepository bookRepository,
+        IAuthorRepository authorRepository,
+        ICategoryRepository categoryRepository,
+        IGenreRepository genreRepository,
+        IPublisherRepository publisherRepository)
     {
         RuleSet("Input", () =>
         {
@@ -27,6 +31,22 @@ public class BookDtoValidator : AbstractValidator<BookDto>
             RuleFor(c => c.ISBN)
                 .MustAsync(async (ISBN, _) => !await bookRepository.IsIsbnUnique(ISBN))
                 .WithMessage("Book with this ISBN already exists.");
+            
+            RuleFor(c => c.AuthorId)
+                .MustAsync(async (authorId, _) => await authorRepository.AuthorExistsAsync(authorId))
+                .WithMessage("Author with this ID does not exist.");
+
+            RuleFor(c => c.CategoryId)
+                .MustAsync(async (categoryId, _) => await categoryRepository.CategoryExistsAsync(categoryId))
+                .WithMessage("Category with this ID does not exist.");
+            
+            RuleFor(c => c.PublisherId)
+                .MustAsync(async (publisherId, _) => await publisherRepository.PublisherExistsAsync(publisherId))
+                .WithMessage("Publisher with this ID does not exist.");
+            
+            RuleForEach(c => c.GenreIds)
+                .MustAsync(async (genreId, _) => await genreRepository.GenreExistsAsync(genreId))
+                .WithMessage("Genre with this ID does not exist.");
         });
     }
 }

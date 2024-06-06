@@ -12,7 +12,7 @@ public interface IBookManager
     
     Task<BookDto?> CreateAsync(BookDto bookDto);
     
-    Task UpdateAsync(int id, BookDto bookDto);
+    Task UpdateAsync(BookDto bookDto);
     
     Task<bool> DeleteAsync(int id);  
 }

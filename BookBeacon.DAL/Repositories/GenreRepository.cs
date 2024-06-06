@@ -70,4 +70,10 @@ internal class GenreRepository : BaseRepository<Genre>, IGenreRepository
     {
         return await DbContext.Genres.Where(g => ids.Contains(g.Id)).ToListAsync();
     }
+    
+    public async Task<bool> GenreExistsAsync(int? id)
+    {
+        return await DbContext.Genres
+            .AnyAsync(g => g.Id == id);
+    }
 }

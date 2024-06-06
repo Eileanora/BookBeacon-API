@@ -9,4 +9,5 @@ public interface IAuthorRepository : IBaseRepository<Author>
     Task<bool> IsNameUnique(string firstName, string lastName);
     public Task<Author?> GetByIdAsync(int id);
     public Task<Author?> GetByNameAsync(string firstName, string lastName);
+    Task<bool> AuthorExistsAsync(int? id);
 }

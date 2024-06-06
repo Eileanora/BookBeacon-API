@@ -10,7 +10,7 @@ public static class UserMapper
         FirstName = userDto.FirstName,
         LastName = userDto.LastName,
         UserName = userDto.UserName,
-        GenderId = userDto.GenderId, 
+        GenderId = userDto.GenderId,
         Email = userDto.Email
     };
 
@@ -20,4 +20,16 @@ public static class UserMapper
         Roles = roles,
     };
 
+    public static UserInfoDto ToUserInfoDto(this User user, IEnumerable<string> roles) => new UserInfoDto
+    {
+        Id = user.Id,
+        UserName = user.UserName,
+        FirstName = user.FirstName,
+        LastName = user.LastName,
+        Email = user.Email,
+        About = user.About,
+        LateReturnCount = user.LateReturnCount,
+        Roles = roles,
+        Gender = user.Gender.Name
+    };
 }

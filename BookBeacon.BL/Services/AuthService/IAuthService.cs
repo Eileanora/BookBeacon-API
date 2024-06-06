@@ -11,4 +11,5 @@ public interface IAuthService
     Task AddToRoleAsync(string userName, string role);
     Task<User> FindByEmailAsync(string Id);
     Task<UserDto>? LoginAsync(UserForLoginDto userDto);
+    Task<UserInfoDto?> GetUserInfoAsync();
 }

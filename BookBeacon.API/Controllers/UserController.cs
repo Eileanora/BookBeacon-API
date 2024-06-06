@@ -5,6 +5,7 @@ using BookBeacon.BL.DTOs.UserDTOs;
 using BookBeacon.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookBeacon.API.Controllers;
 
@@ -62,6 +63,17 @@ public class UserController : ControllerBase
         var user = await _userControllerFacade.AuthService.LoginAsync(userForLoginDto);
         if (user == null)
             return Unauthorized();
+        
+        return Ok(user);
+    }
+    
+    [HttpGet("info")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<ActionResult<UserInfoDto>> GetUserAsync()
+    {
+        var user = await _userControllerFacade.AuthService.GetUserInfoAsync();
+        if (user == null)
+            return NotFound();
         
         return Ok(user);
     }

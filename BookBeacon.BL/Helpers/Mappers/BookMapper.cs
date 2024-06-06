@@ -72,6 +72,10 @@ public static class BookMapper
             Category = book.Category.Name,
             Publisher = book.Publisher.Name,
             Languages = languages?.Select(s => s.Name).ToList(),
+            AuthorId = book.AuthorId,
+            CategoryId = book.CategoryId,
+            PublisherId = book.PublisherId,
+            GenreIds = book.Genres.Select(s => s.Id).ToList(),
         };
     }
     
@@ -89,6 +93,39 @@ public static class BookMapper
             CategoryId = bookDto.CategoryId.GetValueOrDefault(),
             PublisherId = bookDto.PublisherId.GetValueOrDefault(),
             Genres = existingGenres.ToList(),
+        };
+    }
+    
+    public static Book ToUpdateEntity(this BookDto bookDto, Book book)
+    {
+        book.Title = bookDto.Title;
+        book.ISBN = bookDto.ISBN;
+        book.Summary = bookDto.Summary;
+        book.PageCount = bookDto.PageCount.GetValueOrDefault();
+        book.PublicationDate = bookDto.PublicationDate.GetValueOrDefault();
+        book.Edition = bookDto.Edition.GetValueOrDefault();
+        book.AuthorId = bookDto.AuthorId.GetValueOrDefault();
+        book.CategoryId = bookDto.CategoryId.GetValueOrDefault();
+        book.PublisherId = bookDto.PublisherId.GetValueOrDefault();
+        book.Genres = bookDto.GenreIds.Select(s => new Genre { Id = s }).ToList();
+        return book;
+    }
+    
+    public static BookDto ToUpdateDto(this BookDto book)
+    {
+        return new BookDto
+        {
+            Id = book.Id,
+            Title = book.Title,
+            ISBN = book.ISBN,
+            Summary = book.Summary,
+            PageCount = book.PageCount,
+            PublicationDate = book.PublicationDate,
+            Edition = book.Edition,
+            AuthorId = book.AuthorId,
+            CategoryId = book.CategoryId,
+            PublisherId = book.PublisherId,
+            GenreIds = book.GenreIds,
         };
     }
 }

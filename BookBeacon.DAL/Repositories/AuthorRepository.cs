@@ -75,7 +75,15 @@ internal class AuthorRepository : BaseRepository<Author>, IAuthorRepository
             .FirstOrDefaultAsync(a => a.FirstName == firstName && a.LastName == lastName);
         return author;
     }
-    
+
+    public async Task<bool> AuthorExistsAsync(int? id)
+    {
+        if (id == null)
+            return false;
+        return await DbContext.Authors
+            .AnyAsync(a => a.Id == id);
+    }
+
     public async Task<Author?> GetByNamesAsync(string firstName, string lastName)
     {
         var author = await DbContext.Authors

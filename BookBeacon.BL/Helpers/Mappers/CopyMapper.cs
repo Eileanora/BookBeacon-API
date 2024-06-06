@@ -51,6 +51,19 @@ public static class CopyMapper
         };
     }
     
+    public static CopyDto ToPatchDto(this Copy copy)
+    {
+        return new CopyDto
+        {
+            Id = copy.Id,
+            IsAvailable = copy.IsAvailable,
+            ConditionId = copy.ConditionId,
+            Location = copy.Location,
+            Notes = copy.Notes,
+            LanguageId = copy.LanguageId
+        };
+    }
+    
     public static Copy ToCreateEntity(this CopyDto copyDto)
     {
         return new Copy

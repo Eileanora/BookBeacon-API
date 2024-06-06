@@ -54,11 +54,6 @@ public class BookManager : IBookManager
         await _bookManagerFacade.UnitOfWork.SaveAsync();
         return createdBook.ToCreatedDto();
     }
-    
-    public Task UpdateAsync(int id, BookDto bookDto)
-    {
-        throw new NotImplementedException();
-    }
 
     public async Task<bool> DeleteAsync(int id)
     {
@@ -69,5 +64,25 @@ public class BookManager : IBookManager
         _bookManagerFacade.BookRepository.Delete(book);
         await _bookManagerFacade.UnitOfWork.SaveAsync();
         return true;
+    }
+    
+    public async Task UpdateAsync(BookDto bookDto)
+    {
+        var validationResult = await _bookManagerFacade.BookValidator.ValidateAsync(
+            bookDto,
+            options => options.IncludeRuleSets("UpdateBusiness"));
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+
+        var book = await _bookManagerFacade.BookRepository
+            .GetByIdAsync(bookDto.Id);
+        if (book == null)
+            throw new ValidationException("Book not found");
+
+        book = bookDto.ToUpdateEntity(book);
+
+        _bookManagerFacade.BookRepository.Update(book);
+        await _bookManagerFacade.UnitOfWork.SaveAsync();
     }
 }
