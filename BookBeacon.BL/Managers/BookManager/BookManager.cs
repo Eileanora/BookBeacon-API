@@ -26,7 +26,11 @@ public class BookManager : IBookManager
     {
         var book = await _bookManagerFacade.BookRepository
             .GetByIdAsync(id);
-        return book?.ToDto();
+        
+        var languages = await _bookManagerFacade.BookRepository
+            .GetLanguagesForBookAsync(id);
+        
+        return book?.ToDto(languages);
     }
 
     public async Task<BookDto?> CreateAsync(BookDto bookDto)
@@ -41,10 +45,8 @@ public class BookManager : IBookManager
         // Fetch existing genres and languages
         var existingGenres = await _bookManagerFacade.GenreRepository
             .GetGenresByIdsAsync(bookDto.GenreIds.ToList());
-        var existingLanguages = await _bookManagerFacade.LanguageRepository
-            .GetLanguageByIdsAsync(bookDto.LanguageIds.ToList());
 
-        var bookToCreate = bookDto.ToCreateEntity(existingGenres, existingLanguages);
+        var bookToCreate = bookDto.ToCreateEntity(existingGenres);
 
         var createdBook = await _bookManagerFacade.BookRepository
             .CreateAsync(bookToCreate);

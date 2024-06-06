@@ -13,4 +13,5 @@ public interface IBookRepository : IBaseRepository<Book>
     Task<Book?> GetByIdAsync(int id);
     Task<bool> IsIsbnUnique(string title);
     Task<bool> BookExistsAsync(int? id);
+    Task <IEnumerable<Language?>?> GetLanguagesForBookAsync(int bookId);
 }

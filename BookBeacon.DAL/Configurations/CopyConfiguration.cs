@@ -23,5 +23,8 @@ public class CopyConfiguration : IEntityTypeConfiguration<Copy>
         
         builder.HasMany(c => c.Reservations)
             .WithOne(r => r.Copy);
+        
+        builder.HasOne(c => c.Language)
+            .WithMany(l => l.Copies);
     }
 }

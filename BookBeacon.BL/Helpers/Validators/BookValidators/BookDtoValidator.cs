@@ -20,7 +20,6 @@ public class BookDtoValidator : AbstractValidator<BookDto>
             RuleFor(x => x.CategoryId).NotEmpty();
             RuleFor(x => x.AuthorId).NotEmpty();
             RuleFor(x => x.GenreIds).NotEmpty();
-            RuleFor(x => x.LanguageIds).NotEmpty();
         });
         
         RuleSet("Business", () =>
@@ -28,7 +27,6 @@ public class BookDtoValidator : AbstractValidator<BookDto>
             RuleFor(c => c.ISBN)
                 .MustAsync(async (ISBN, _) => !await bookRepository.IsIsbnUnique(ISBN))
                 .WithMessage("Book with this ISBN already exists.");
-            
         });
     }
 }

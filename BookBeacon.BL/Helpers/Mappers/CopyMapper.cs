@@ -15,6 +15,8 @@ public static class CopyMapper
             ConditionName = copy.Condition.Name,
             Location = copy.Location,
             Notes = copy.Notes,
+            LanguageName = copy.Language.Name,
+            LanguageId = copy.LanguageId
         };
     }
     
@@ -44,6 +46,8 @@ public static class CopyMapper
             ConditionName = copy.Condition.Name,
             Location = copy.Location,
             Notes = copy.Notes,
+            LanguageId = copy.LanguageId,
+            LanguageName = copy.Language.Name
         };
     }
     
@@ -57,6 +61,7 @@ public static class CopyMapper
             Location = copyDto.Location,
             Notes = copyDto.Notes,
             BookId = copyDto.BookId,
+            LanguageId = copyDto.LanguageId.GetValueOrDefault()
         };
     }
     
@@ -69,6 +74,8 @@ public static class CopyMapper
             ConditionId = copy.ConditionId,
             Location = copy.Location,
             Notes = copy.Notes,
+            BookId = copy.BookId,
+            LanguageId = copy.LanguageId
         };
     }
     
@@ -78,6 +85,8 @@ public static class CopyMapper
         copy.ConditionId = copyDto.ConditionId.GetValueOrDefault();
         copy.Location = copyDto.Location;
         copy.Notes = copyDto.Notes;
+        copy.BookId = copyDto.BookId;
+        copy.LanguageId = copyDto.LanguageId.GetValueOrDefault();
         return copy;
     }
     
@@ -91,6 +100,7 @@ public static class CopyMapper
             ConditionId = source.ConditionId,
             Location = source.Location,
             Notes = source.Notes,
+            LanguageId = source.LanguageId
         };
     }
 }

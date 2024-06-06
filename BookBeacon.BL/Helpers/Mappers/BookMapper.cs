@@ -18,7 +18,6 @@ public static class BookMapper
             Publisher = book.Publisher.Name,
             AvailableCopies = book.Copies.Count(c => c.IsAvailable),
             GenresNames = book.Genres.Select(s => s.Name).ToList(),
-            Languages = book.Languages.Select(s => s.Name).ToList()
         };
     }
     
@@ -48,14 +47,15 @@ public static class BookMapper
             PageCount = book.PageCount,
             PublicationDate = book.PublicationDate,
             Edition = book.Edition,
-            AvailableCopies = book.Copies.Count(c => c.IsAvailable),
             GenresNames = book.Genres.Select(s => s.Name).ToList(),
-            Languages = book.Languages.Select(s => s.Name).ToList(),
+            AuthorId = book.AuthorId,
+            CategoryId = book.CategoryId,
+            PublisherId = book.PublisherId,
         };
     }
     
     
-    public static BookDto ToDto(this Book book)
+    public static BookDto ToDto(this Book book, IEnumerable<Language?>? languages)
     {
         return new BookDto
         {
@@ -68,14 +68,14 @@ public static class BookMapper
             Edition = book.Edition,
             AvailableCopies = book.Copies.Count(c => c.IsAvailable),
             GenresNames = book.Genres.Select(s => s.Name).ToList(),
-            Languages = book.Languages.Select(s => s.Name).ToList(),
             Author = book.Author.FirstName + " " + book.Author.LastName,
             Category = book.Category.Name,
-            Publisher = book.Publisher.Name
+            Publisher = book.Publisher.Name,
+            Languages = languages?.Select(s => s.Name).ToList(),
         };
     }
     
-    public static Book ToCreateEntity(this BookDto bookDto, List<Genre> existingGenres, List<Language> existingLanguages)
+    public static Book ToCreateEntity(this BookDto bookDto, List<Genre> existingGenres)
     {
         return new Book
         {
@@ -89,7 +89,6 @@ public static class BookMapper
             CategoryId = bookDto.CategoryId.GetValueOrDefault(),
             PublisherId = bookDto.PublisherId.GetValueOrDefault(),
             Genres = existingGenres.ToList(),
-            Languages = existingLanguages.ToList()
         };
     }
 }

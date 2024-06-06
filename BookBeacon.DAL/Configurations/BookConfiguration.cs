@@ -25,16 +25,6 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         
         builder.HasOne(b => b.Publisher)
             .WithMany(p => p.Books);
-
-        builder.HasMany(b => b.Languages)
-            .WithMany(b => b.Books)
-            .UsingEntity<BookLanguage>(
-                l => l.HasOne(l => l.Language)
-                    .WithMany()
-                    .HasForeignKey(l => l.LanguageId),
-                r => r.HasOne(l => l.Book)
-                    .WithMany()
-                    .HasForeignKey(l => l.BookId));
         
         builder.HasMany(b => b.Genres)
             .WithMany(g => g.Books)

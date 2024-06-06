@@ -18,7 +18,6 @@ public class Book : PrimaryKeyBaseEntity
     public int AuthorId { get; set; }
     public Author Author { get; set; } 
     public ICollection<Copy> Copies { get; set; } = new List<Copy>();
-    public ICollection<Language> Languages { get; set; } = new List<Language>();
     public ICollection<Genre> Genres { get; set; } = new List<Genre>();
 }
 

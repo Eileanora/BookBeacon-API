@@ -25,14 +25,19 @@ public class BookDto
     
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? PublisherId { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Publisher { get; set; } 
     
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? CategoryId { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Category { get; set; } 
     
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? AuthorId { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Author { get; set; } 
     public int? AvailableCopies { get; set; }
     
@@ -47,7 +52,5 @@ public class BookDto
     
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IEnumerable<int> GenreIds { get; set; }
-    
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IEnumerable<int> LanguageIds { get; set; }
+
 }

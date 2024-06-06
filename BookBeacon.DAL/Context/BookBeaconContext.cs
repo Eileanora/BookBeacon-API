@@ -31,7 +31,6 @@ public class BookBeaconContext : IdentityDbContext<User>
         LanguageSeeding.SeedLanguages(modelBuilder);
         BookSeeding.SeedBooks(modelBuilder);
         BookGenreSeeding.SeedBookGenre(modelBuilder);
-        BookLanguageSeeding.SeedBookLanguage(modelBuilder);
         BookConditionSeeding.SeedBookConditions(modelBuilder);
         CopiesSeeding.SeedCopies(modelBuilder);
     }

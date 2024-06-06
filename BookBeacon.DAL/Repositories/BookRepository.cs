@@ -16,20 +16,7 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
     {
         _sortHelper = sortHelper;
     }
-
-    // public new async Task<IEnumerable<Book>> GetAllAsync()
-    // {
-    //     return await DbContext.Books
-    //         .AsNoTracking()
-    //         .Include(b => b.Author)
-    //         .Include(b => b.Publisher)
-    //         .Include(b => b.Category)
-    //         .Include(b => b.Genres)
-    //         .Include(b => b.Copies)
-    //         .Include(b => b.Languages)
-    //         .ToListAsync();            
-    //         
-    // }
+    
     public async Task<PagedList<Book>> GetAllAsync(BookResourceParameters resourceParameters)
     {
         var collection = DbContext.Books as IQueryable<Book>;
@@ -40,8 +27,7 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
             .Include(b => b.Publisher)
             .Include(b => b.Category)
             .Include(b => b.Genres)
-            .Include(b => b.Copies)
-            .Include(b => b.Languages);
+            .Include(b => b.Copies);
         
         if (!string.IsNullOrWhiteSpace(resourceParameters.SearchQuery))
         {
@@ -59,6 +45,23 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
             sortedList,
             resourceParameters.PageNumber,
             resourceParameters.PageSize);
+    }
+    
+    public async Task<IEnumerable<Language?>?> GetLanguagesForBookAsync(int bookId)
+    {
+        var book = await DbContext.Books
+            .FindAsync(bookId);
+
+        if (book == null)
+            return null;
+        
+        await DbContext.Entry(book)
+            .Collection(b => b.Copies)
+            .Query()
+            .Include(c => c.Language)
+            .LoadAsync();
+        
+        return book.Copies.Select(c => c.Language).Distinct();
     }
 
     private IQueryable<Book> ApplyFiltering(
@@ -98,7 +101,7 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
         {
             var language = resourceParameters.Language.Trim();
             collection = collection.Where(b =>
-                b.Languages.Any(l => l.Name.Contains(language)));
+                b.Copies.Any(c => c.Language.Name.Contains(language)));
         }
         
         return collection;
@@ -112,7 +115,6 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
             .Include(b => b.Publisher)
             .Include(b => b.Category)
             .Include(b => b.Genres)
-            .Include(b => b.Languages)
             .Include(b => b.Copies)
             .FirstOrDefaultAsync(b => b.Id == id);
     }

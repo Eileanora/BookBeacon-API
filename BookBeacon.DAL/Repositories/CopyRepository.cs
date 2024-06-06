@@ -33,6 +33,7 @@ internal class CopyRepository : BaseRepository<Copy>, ICopyRepository
             .AsNoTracking()
             .Include(c => c.Book)
             .Include(c => c.Condition)
+            .Include(c => c.Language)
             .FirstOrDefaultAsync(c => c.Id == copyId);
     }
 
@@ -43,7 +44,8 @@ internal class CopyRepository : BaseRepository<Copy>, ICopyRepository
         collection = collection
             .AsNoTracking()
             .Include(c => c.Book)
-            .Include(c => c.Condition);
+            .Include(c => c.Condition)
+            .Include(c => c.Language);
         
         collection = collection
             .Where(c => c.BookId == resourceParameters.BookId);
@@ -82,6 +84,13 @@ internal class CopyRepository : BaseRepository<Copy>, ICopyRepository
             var condition = resourceParameters.Condition.Trim();
             collection = collection.Where(c =>
                 c.Condition.Name.Contains(condition, StringComparison.CurrentCultureIgnoreCase));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(resourceParameters.Language))
+        {
+            var language = resourceParameters.Language.Trim();
+            collection = collection.Where(c =>
+                c.Language.Name.Contains(language, StringComparison.CurrentCultureIgnoreCase));
         }
 
         return collection;

@@ -17,4 +17,10 @@ internal class LanguageRepository : BaseRepository<Language>, ILanguageRepositor
             .Where(g => ids.Contains(g.Id))
             .ToListAsync();
     }
+
+    public async Task<bool> LanguageExistsAsync(int? id)
+    {
+        return await DbContext.Languages
+            .AnyAsync(g => g.Id == id);
+    }
 }

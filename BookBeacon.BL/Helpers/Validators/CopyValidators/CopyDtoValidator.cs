@@ -8,22 +8,22 @@ public class CopyDtoValidator : AbstractValidator<CopyDto>
 {
     public CopyDtoValidator(
         IBookRepository bookRepository,
-        IBookConditionRepository bookConditionRepository)
+        IBookConditionRepository bookConditionRepository,
+        ILanguageRepository languageRepository)
     {
         RuleSet("Input", () =>
         {
             RuleFor(c => c.BookId)
-                .NotEmpty()
-                .WithMessage("Book ID is required.");
-           
+                .NotEmpty();
+
             RuleFor(c => c.ConditionId)
-                .NotEmpty()
-                .WithMessage("Condition ID is required.");
-            
+                .NotEmpty();
+
             RuleFor(c => c.IsAvailable)
-                .NotEmpty()
-                .WithMessage("IsAvailable is required.");
-            
+                .NotEmpty();
+
+            RuleFor(c => c.LanguageId)
+                .NotEmpty();
         });
 
         RuleSet("CreateBusiness", () =>
@@ -36,6 +36,10 @@ public class CopyDtoValidator : AbstractValidator<CopyDto>
                 .MustAsync(async (conditionId, _) => await bookConditionRepository.ConditionExistsAsync(conditionId))
                 .WithMessage("Condition is not available.");
 
+            RuleFor(c => c.LanguageId)
+                .MustAsync(async (languageId, _) => await languageRepository.LanguageExistsAsync(languageId))
+                .WithMessage("Language is not available.");
+
         });
 
 
@@ -44,10 +48,14 @@ public class CopyDtoValidator : AbstractValidator<CopyDto>
             RuleFor(c => c.BookId)
                 .MustAsync(async (bookId, _) => await bookRepository.BookExistsAsync(bookId))
                 .WithMessage("Book is not available.");
-            
+
             RuleFor(c => c.ConditionId)
                 .MustAsync(async (conditionId, _) => await bookConditionRepository.ConditionExistsAsync(conditionId))
                 .WithMessage("Condition is not available.");
+
+            RuleFor(c => c.LanguageId)
+                .MustAsync(async (languageId, _) => await languageRepository.LanguageExistsAsync(languageId))
+                .WithMessage("Language is not available.");
         });
     }
 }
