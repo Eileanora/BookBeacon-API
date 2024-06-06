@@ -17,19 +17,19 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
         _sortHelper = sortHelper;
     }
 
-    public new async Task<IEnumerable<Book>> GetAllAsync()
-    {
-        return await DbContext.Books
-            .AsNoTracking()
-            .Include(b => b.Author)
-            .Include(b => b.Publisher)
-            .Include(b => b.Category)
-            .Include(b => b.Genres)
-            .Include(b => b.Copies)
-            .Include(b => b.Languages)
-            .ToListAsync();            
-            
-    }
+    // public new async Task<IEnumerable<Book>> GetAllAsync()
+    // {
+    //     return await DbContext.Books
+    //         .AsNoTracking()
+    //         .Include(b => b.Author)
+    //         .Include(b => b.Publisher)
+    //         .Include(b => b.Category)
+    //         .Include(b => b.Genres)
+    //         .Include(b => b.Copies)
+    //         .Include(b => b.Languages)
+    //         .ToListAsync();            
+    //         
+    // }
     public async Task<PagedList<Book>> GetAllAsync(BookResourceParameters resourceParameters)
     {
         var collection = DbContext.Books as IQueryable<Book>;
@@ -50,7 +50,20 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
                 b.Title.Contains(searchQuery) ||
                 b.ISBN.Contains(searchQuery));
         }
+        
+        collection = ApplyFiltering(collection, resourceParameters);
+        
+        var sortedList = _sortHelper.ApplySort(collection, resourceParameters.OrderBy);
+        
+        return await CreateAsync(
+            sortedList,
+            resourceParameters.PageNumber,
+            resourceParameters.PageSize);
+    }
 
+    private IQueryable<Book> ApplyFiltering(
+        IQueryable<Book> collection, BookResourceParameters resourceParameters)
+    {
         if (!string.IsNullOrWhiteSpace(resourceParameters.Author))
         {
             var author = resourceParameters.Author.Trim();
@@ -88,12 +101,7 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
                 b.Languages.Any(l => l.Name.Contains(language)));
         }
         
-        var sortedList = _sortHelper.ApplySort(collection, resourceParameters.OrderBy);
-        
-        return await CreateAsync(
-            sortedList,
-            resourceParameters.PageNumber,
-            resourceParameters.PageSize);
+        return collection;
     }
 
     public Task<Book?> GetByIdAsync(int id)
@@ -114,5 +122,14 @@ internal class BookRepository : BaseRepository<Book>, IBookRepository
         return await DbContext.Books
             .AsNoTracking()
             .AnyAsync(b => b.Title == title);
+    }
+
+    public async Task<bool> BookExistsAsync(int? id)
+    {
+        if (id == null)
+            return false;
+        return await DbContext.Books
+            .AsNoTracking()
+            .AnyAsync(b => b.Id == id);
     }
 }

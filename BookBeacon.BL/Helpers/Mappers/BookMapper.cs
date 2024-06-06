@@ -37,6 +37,24 @@ public static class BookMapper
         );
     }
     
+    public static BookDto ToCreatedDto(this Book book)
+    {
+        return new BookDto
+        {
+            Id = book.Id,
+            Title = book.Title,
+            ISBN = book.ISBN,
+            Summary = book.Summary,
+            PageCount = book.PageCount,
+            PublicationDate = book.PublicationDate,
+            Edition = book.Edition,
+            AvailableCopies = book.Copies.Count(c => c.IsAvailable),
+            GenresNames = book.Genres.Select(s => s.Name).ToList(),
+            Languages = book.Languages.Select(s => s.Name).ToList(),
+        };
+    }
+    
+    
     public static BookDto ToDto(this Book book)
     {
         return new BookDto
@@ -44,16 +62,16 @@ public static class BookMapper
             Id = book.Id,
             Title = book.Title,
             ISBN = book.ISBN,
-            Author = book.Author.FirstName + " " + book.Author.LastName,
             Summary = book.Summary,
             PageCount = book.PageCount,
             PublicationDate = book.PublicationDate,
             Edition = book.Edition,
-            Category = book.Category.Name,
-            Publisher = book.Publisher.Name,
             AvailableCopies = book.Copies.Count(c => c.IsAvailable),
             GenresNames = book.Genres.Select(s => s.Name).ToList(),
             Languages = book.Languages.Select(s => s.Name).ToList(),
+            Author = book.Author.FirstName + " " + book.Author.LastName,
+            Category = book.Category.Name,
+            Publisher = book.Publisher.Name
         };
     }
     

@@ -4,10 +4,12 @@ using BookBeacon.BL.DTOs.BookDTOs;
 using BookBeacon.BL.DTOs.GenreDTOs;
 using BookBeacon.BL.Helpers.Facades.AuthorManagerFacade;
 using BookBeacon.BL.Helpers.Facades.BookManagerFacade;
+using BookBeacon.BL.Helpers.Facades.CopyManagerFacade;
 using BookBeacon.BL.Helpers.Facades.GenreManagerFacade;
 using BookBeacon.BL.Helpers.Facades.ReservationManagerFacade;
 using BookBeacon.BL.Managers.AuthorManager;
 using BookBeacon.BL.Managers.BookManager;
+using BookBeacon.BL.Managers.CopyManager;
 using BookBeacon.BL.Managers.GenreManager;
 using BookBeacon.BL.Managers.JwtTokenManager;
 using BookBeacon.BL.Managers.ReservationManager;
@@ -31,6 +33,8 @@ public static class DependencyInjection
         services.AddScoped<IReservationManagerFacade, ReservationManagerFacade>();
         services.AddScoped<IReservationManager, ReservationManager>();
         services.AddScoped<IJwtTokenManager, JwtTokenManager>();
+        services.AddScoped<ICopyManagerFacade, CopyManagerFacade>();
+        services.AddScoped<ICopyManager, CopyManager>();
 
         services.AddScoped<IAuthService, AuthService>();
         

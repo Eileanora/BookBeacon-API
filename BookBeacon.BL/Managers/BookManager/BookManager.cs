@@ -50,9 +50,9 @@ public class BookManager : IBookManager
             .CreateAsync(bookToCreate);
 
         await _bookManagerFacade.UnitOfWork.SaveAsync();
-        return createdBook.ToDto();
+        return createdBook.ToCreatedDto();
     }
-
+    
     public Task UpdateAsync(int id, BookDto bookDto)
     {
         throw new NotImplementedException();

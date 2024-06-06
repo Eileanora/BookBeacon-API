@@ -28,12 +28,15 @@ public static class DependencyInjection
         services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddScoped<ICopyRepository, CopyRepository>();
         services.AddScoped<ILanguageRepository, LanguageRepository>();
+        services.AddScoped<IBookConditionRepository, BookConditionRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISortHelper<Genre>, SortHelper<Genre>>();
         services.AddScoped<ISortHelper<Author>, SortHelper<Author>>();
         services.AddScoped<ISortHelper<Book>, SortHelper<Book>>();
         services.AddScoped<ISortHelper<Reservation>, SortHelper<Reservation>>();
+        services.AddScoped<ISortHelper<Copy>, SortHelper<Copy>>();
+
         
         
         return services;
