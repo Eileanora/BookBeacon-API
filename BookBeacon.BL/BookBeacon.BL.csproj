@@ -6,4 +6,27 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="temp\AuthorManagerFacade\" />
+      <Folder Include="temp\AuthorManager\" />
+      <Folder Include="temp\BookManagerFacade\" />
+      <Folder Include="temp\BookManager\" />
+      <Folder Include="temp\CategoryManagerFacade\" />
+      <Folder Include="temp\CategoryManager\" />
+      <Folder Include="temp\CopyManagerFacade\" />
+      <Folder Include="temp\CopyManager\" />
+      <Folder Include="temp\LanguageManagerFacade\" />
+      <Folder Include="temp\PublisherManagerFacade\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookBeacon.Models\BookBeacon.Models.csproj" />
+    </ItemGroup>
+
 </Project>
