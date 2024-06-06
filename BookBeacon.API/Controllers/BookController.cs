@@ -6,6 +6,7 @@ using BookBeacon.BL.DTOs.BookDTOs;
 using BookBeacon.BL.Helpers.Mappers;
 using BookBeacon.BL.ResourceParameters;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,7 @@ public class BookController : ControllerBase
     
     
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<ActionResult<BookDto>> CreateBookAsync(
         [FromBody] BookDto book)
     {
@@ -71,6 +73,7 @@ public class BookController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> DeleteBook(int bookId)
     {
         var deleted = await _bookControllerFacade.BookManager.DeleteAsync(bookId);
@@ -82,6 +85,7 @@ public class BookController : ControllerBase
     }
     
     [HttpPatch("{bookId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> UpdateBook(
         int bookId,
         JsonPatchDocument<BookDto> patchDocument)
@@ -109,4 +113,10 @@ public class BookController : ControllerBase
         return NoContent();
     }
     
+    [HttpOptions]
+    public IActionResult GetBookOptions()
+    {
+        Response.Headers.Append("Allow", "GET,POST,PATCH,DELETE,OPTIONS");
+        return Ok();
+    }
 }

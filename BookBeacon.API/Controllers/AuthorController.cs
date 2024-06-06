@@ -7,6 +7,7 @@ using BookBeacon.BL.Helpers.Mappers;
 using BookBeacon.BL.ResourceParameters;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace BookBeacon.API.Controllers;
@@ -24,6 +25,7 @@ public class AuthorController : ControllerBase
     
     [HttpGet(Name = "GetAllAuthors")]
     [HttpHead]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> GetAllAuthorsAsync(
         [FromQuery] AuthorResourceParameters resourceParameters)
     {
@@ -37,6 +39,7 @@ public class AuthorController : ControllerBase
     }
     
     [HttpGet("{authorId}", Name = "GetAuthor")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> GetAuthorByIdAsync(int authorId)
     {
         var author = await _authorControllerFacade.AuthorManager.GetByIdAsync(authorId);
@@ -48,6 +51,7 @@ public class AuthorController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<ActionResult<AuthorDto>> CreateAuthorAsync(
         [FromBody] AuthorDto author)
     {
@@ -75,6 +79,7 @@ public class AuthorController : ControllerBase
     
     
     [HttpDelete("{authorId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> DeleteAuthorAsync(int authorId)
     {
         var deleted = await _authorControllerFacade.AuthorManager.DeleteAsync(authorId);
@@ -93,6 +98,7 @@ public class AuthorController : ControllerBase
     }
     
     [HttpPatch("{authorId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> PartiallyUpdateAuthorAsync(
         int authorId,
         JsonPatchDocument<AuthorDto> patchDocument)

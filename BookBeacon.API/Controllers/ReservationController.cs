@@ -23,7 +23,7 @@ public class ReservationController : ControllerBase
 
     [HttpGet(Name = "GetReservations")]
     [HttpHead]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
     public async Task<ActionResult<PagedList<ReservationDto>>> GetReservations(
         [FromQuery] ReservationResourceParameters resourceParameters)
     {
@@ -38,7 +38,7 @@ public class ReservationController : ControllerBase
     }
     
     [HttpGet("{reservationId}", Name = "GetReservation")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
     public async Task<ActionResult<ReservationDto>> GetReservation(int reservationId)
     {
         var reservation = await _reservationControllerFacade.ReservationManager
@@ -51,7 +51,7 @@ public class ReservationController : ControllerBase
     }
     
     [HttpPost(Name = "CreateReservation")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
     public async Task<ActionResult<ReservationDto>> CreateReservation(
         [FromBody] CreateReservationDto reservationDto)
     {
@@ -74,6 +74,7 @@ public class ReservationController : ControllerBase
     }
     
     [HttpPost("{reservationId}/cancel", Name = "CancelReservation")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult> CancelReservation(int reservationId)
     {
@@ -90,7 +91,7 @@ public class ReservationController : ControllerBase
     }
     
     [HttpDelete("{reservationId}", Name = "DeleteReservation")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<ActionResult> DeleteReservation(int reservationId)
     {
         var reservation = _reservationControllerFacade.ReservationManager
@@ -103,5 +104,12 @@ public class ReservationController : ControllerBase
             .DeleteAsync(reservationId);
         
         return NoContent();
+    }
+    
+    [HttpOptions]
+    public IActionResult GetReservationOptions()
+    {
+        Response.Headers.Append("Allow", "GET, POST, DELETE, HEAD, OPTIONS");
+        return Ok();
     }
 }

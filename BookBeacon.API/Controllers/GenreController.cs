@@ -8,6 +8,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Asp.Versioning;
 using BookBeacon.BL.Helpers.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookBeacon.API.Controllers;
 
@@ -25,6 +26,7 @@ public class GenreController : ControllerBase
     
     [HttpGet(Name = "GetAllGenres")]
     [HttpHead]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> GetAllGenresAsync(
         [FromQuery] GenreResourceParameters resourceParameters)
     {
@@ -39,6 +41,7 @@ public class GenreController : ControllerBase
     }
     
     [HttpGet("{genreId}", Name = "GetGenre")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> GetGenreByIdAsync(int genreId)
     {
         var genre = await _genreControllerFacade.GenreManager.GetByIdAsync(genreId);
@@ -50,6 +53,7 @@ public class GenreController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<ActionResult<GenreDto>> CreateGenreAsync(
         [FromBody] GenreDto genre)
     {
@@ -76,6 +80,7 @@ public class GenreController : ControllerBase
     }
     
     [HttpDelete("{genreId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> DeleteGenreAsync(int genreId)
     {
         var deleted = await _genreControllerFacade.GenreManager
@@ -93,6 +98,7 @@ public class GenreController : ControllerBase
     }
     
     [HttpPatch("{genreId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> UpdateGenreAsync(
         int genreId,
         JsonPatchDocument<GenreDto> patchDocument)

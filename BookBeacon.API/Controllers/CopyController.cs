@@ -6,6 +6,7 @@ using BookBeacon.BL.Helpers.Mappers;
 using BookBeacon.BL.ResourceParameters;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace BookBeacon.API.Controllers;
@@ -49,6 +50,7 @@ public class CopyController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<ActionResult<CopyDto>> CreateCopyAsync(
         [FromBody] CopyDto copy)
     {
@@ -69,6 +71,7 @@ public class CopyController : ControllerBase
     }
     
     [HttpPatch("{copyId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> UpdateCopy(
         int copyId,
         JsonPatchDocument<CopyDto> patchDocument)
@@ -96,6 +99,7 @@ public class CopyController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> DeleteCopy(int copyId)
     {
         var deleted = await _copyControllerFacade.CopyManager.DeleteAsync(copyId);
@@ -106,4 +110,10 @@ public class CopyController : ControllerBase
         return NoContent();
     }
     
+    [HttpOptions]
+    public IActionResult GetCopyOptions()
+    {
+        Response.Headers.Append("Allow", "GET,POST,PATCH,DELETE,OPTIONS");
+        return Ok();
+    }
 }
