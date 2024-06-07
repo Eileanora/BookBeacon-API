@@ -42,7 +42,7 @@ public class ReservationDtoValidator : AbstractValidator<CreateReservationDto>
             // check if the user has a reservation for the same book
             RuleFor(x => x)
                 .MustAsync(async (x, _) => 
-                    await reservationRepository.IsReserved(x.UserId, x.BookId))
+                    !await reservationRepository.IsReserved(x.UserId, x.BookId))
                         .WithMessage("User has already reserved this book.");
         });
         

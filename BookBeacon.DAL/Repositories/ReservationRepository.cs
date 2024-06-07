@@ -79,6 +79,7 @@ internal class ReservationRepository : BaseRepository<Reservation>, IReservation
     public async Task<bool> IsReserved(string userId, int bookId)
     {
         return await DbContext.Reservations
+            .Include(c => c.Copy)
             .AnyAsync(r => r.User.Id == userId && r.Copy.BookId == bookId);
     }
 
