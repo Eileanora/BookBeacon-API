@@ -80,7 +80,9 @@ internal class ReservationRepository : BaseRepository<Reservation>, IReservation
     {
         return await DbContext.Reservations
             .Include(c => c.Copy)
-            .AnyAsync(r => r.User.Id == userId && r.Copy.BookId == bookId);
+            .AnyAsync(r => r.User.Id == userId
+                           && r.Copy.BookId == bookId
+                           && r.IsReturned == false);
     }
 
     public async Task<int> GetReservationsCountAsync(string userId)
